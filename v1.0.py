@@ -10,7 +10,7 @@ class Categories:
         self.categories = categories
         self.answer = answer
         self.listOfAnswers = listOfAnswers
-        self.orderedAnswers = dict.fromkeys(range(11))
+        self.orderedAnswers = dict.fromkeys(range(10))
 
     def __str__(self):
         return f"{self.orderedAnswers}"
@@ -24,7 +24,7 @@ class Categories:
         self._answer = newAnswer
 
     def GetAnswers(self):
-        answerPattern = re.compile(r'([1-9]|10)\s?([A-Za-z ]{1,25})')
+        answerPattern = re.compile(r'([1-9])\s?([A-Za-z\' ]{1,25})')
         answerMatch = answerPattern.finditer(self._answer)
         for match in answerMatch:
             self.listOfAnswers.append(match[0])
@@ -36,11 +36,13 @@ class Categories:
             if newAns[0] == " ":
                 newAns = newAns[1:]
             self.orderedAnswers[currIndex] = newAns
+            for i in range(10):
+                if not self.orderedAnswers[i]:
+                    self.orderedAnswers[i] = "\u2717"
 
     def PrintOutput(self):
         for i in range(9):
             print(f"{i+1}.  {self.categories[i]:<32}\t{self.orderedAnswers[i+1]}")
-        print(f"10. {self.categories[9]:<32}\t{self.orderedAnswers[10]}")
         print("\n")
 
 
@@ -71,8 +73,8 @@ def RandLetter(currLetter):
 
 def GetCategories():
     """
-    Opens the categories.txt files and randomly selects 10 categories to find words for.
-    Outputs the 10 numbered categories.
+    Opens the categories.txt files and randomly selects 9 categories to find words for.
+    Outputs the 9 numbered categories.
 
     Parameters
     ------------------
@@ -86,12 +88,12 @@ def GetCategories():
 
     categoriesFile = open('categories.txt', 'r')        #opens categories txt file
     categories = categoriesFile.readlines()             #maps every line to list
-    selectedCategories = np.random.choice(range(106), 10, replace=False)    #creates array with 10 random numbers (0-106)
+    selectedCategories = np.random.choice(range(106), 9, replace=False)    #creates array with 10 random numbers (0-106)
     curCat = 0
     selectList = []
     for i in selectedCategories:                        #loop to output the random categories for this run
         curCat+=1
-        print(f'{curCat:>2}. {categories[i]}')
+        print(f'{curCat}. {categories[i]}')
         selectList.append(categories[i][:-1])           #sets categories into list
 
     results = Categories(selectList)                    #creates Categories object with items from list
@@ -100,8 +102,8 @@ def GetCategories():
 
 def StartGame():
     """
-    Starts the game, outputs 10 random categories by calling GetCategories().
-    Counts down from 120 seconds and asks the user to continuously input words 
+    Starts the game, outputs 9 random categories by calling GetCategories().
+    Counts down from 100 seconds and asks the user to continuously input words 
     that match with the given categories.
 
     Parameters
@@ -113,11 +115,11 @@ def StartGame():
     none
     """
 
-    print("Starting Game\n")    
+    print("100 Seconds Start NOW!\n")    
     usrWords = ""                                   
     startTime = time.time()                         #gets current time
     results = GetCategories()                       #calls functions to print random categories, gets object
-    while time.time() - startTime <= 10:            #120 second timer
+    while time.time() - startTime <= 100:           #100 second timer
         usrWords += str(input())                    #continuously get user input
 
     print("\n")
@@ -126,7 +128,6 @@ def StartGame():
     results.GetAnswers()
     results.AnswerToDict()
     results.PrintOutput()
-    
 
 
 def MainMenu():
