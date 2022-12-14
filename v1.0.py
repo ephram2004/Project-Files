@@ -43,11 +43,11 @@ def GetCategories():
     none
     """
 
-    categoriesFile = open('categories.txt', 'r')
-    categories = categoriesFile.readlines()
-    selectedCategories = np.random.choice(range(106), 10, replace=False)
+    categoriesFile = open('categories.txt', 'r')        #opens categories txt file
+    categories = categoriesFile.readlines()             #maps every line to list
+    selectedCategories = np.random.choice(range(106), 10, replace=False)    #creates array with 10 random numbers (0-106)
     curCat = 0
-    for i in selectedCategories:
+    for i in selectedCategories:                        #loop to output the random categories for this run
         curCat+=1
         print(f'{curCat:>2}. {categories[i]}')
 
@@ -67,12 +67,12 @@ def StartGame():
     none
     """
 
-    print("Starting Game\n")
-    usrWords = ""
-    startTime = time.time()
-    GetCategories()
-    while time.time() - startTime <= 10:
-        usrWords += str(input())
+    print("Starting Game\n")    
+    usrWords = ""                                   
+    startTime = time.time()                         #gets current time
+    GetCategories()                                 #calls functions to print random categories
+    while time.time() - startTime <= 10:            #120 second timer
+        usrWords += str(input())                    #continuously get user input
 
 
 
@@ -98,16 +98,16 @@ def MainMenu():
         letterToPlay = RandLetter(letterToPlay)             #calls function to output random letter
         print(f'\nCurrent Letter is: {letterToPlay}\n')
         usrOption = int(input(f"Select an option:\n1. Start game\n2. Re-Roll Letter\n3. Exit\n"))
-        match usrOption:
+        match usrOption:                                    #calls function depending on user input
             case 1:
-                StartGame()
+                StartGame()                                 #starts game if input is 1
                 break
-            case 2:
-                continue
+            case 2:     
+                continue                                    #loops again to randomize letter
             case 3:
-                break
+                break                                       #breaks out of while loop to end program
             case _:
-                print("Invalid Option. Please Try Again.")
+                print("Invalid Option. Please Try Again.")  #in case user input is invalid
 
 
 
