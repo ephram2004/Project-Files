@@ -6,30 +6,104 @@ import re
 
 
 class Categories:
+    """
+    A class to represent a game of categories.
+
+    Attributes
+    ------------------
+    categories : list-of-strings
+        list of randomly selected categories
+    answer : str
+        raw string of user answers
+    listOfAnswers : list-of-string
+        list of individual user answers ordered by category number
+    orderedAnswers : dictionary[int: "string"]
+        pairs final answers to categories
+
+    Methods
+    ------------------
+    GetAnswers():
+        Uses RegEx to separate individual answers.
+    AnswerToDict():
+        Orders answers into dictionary
+    PrintOutput():
+        Prints the categories and corresponding answers in order
+    """
+
     def __init__(self, categories, answer="", listOfAnswers=[]):
+        """
+        Constructs attributes for the object.
+
+        Parameters
+        ------------------
+        categories : list-of-strings
+            list of randomly selected categories
+        answer : str
+            raw string of user answers
+        listOfAnswers : list-of-string
+            list of individual user answers ordered by category number
+        orderedAnswers : dictionary[int: "string"]
+            pairs final answers to categories
+
+        """
         self.categories = categories
         self.answer = answer
         self.listOfAnswers = listOfAnswers
         self.orderedAnswers = dict.fromkeys(range(10))
 
     def __str__(self):
+        """
+        (Debugging) Prints created dictionary.
+
+        Returns
+        ------------------
+        dict
+            dictionary of categories and answers
+        """
         return f"{self.orderedAnswers}"
 
     @property
     def answer(self):
+        """
+        Outputs value of raw answer string.
+
+        Returns
+        ------------------
+        str
+            raw string of user-inputted answers
+        """
         return self._answer
 
     @answer.setter
     def answer(self, newAnswer):
+        """
+        Sets the raw answer string.
+
+        Parameters
+        ------------------
+        newAnswer : str
+                   user-given answers
+        """
         self._answer = newAnswer
 
     def GetAnswers(self):
-        answerPattern = re.compile(r'([1-9])\s?([A-Za-z\' ]{1,25})')
+        """
+        Splits raw string into individually numbered answers using Regular Expressions.
+        Checks for digit followed by space followed by characters or special characters.
+        Outputs the answers into a list
+        """
+
+        answerPattern = re.compile(r'([1-9])\s?([A-Za-z\'\- ]{1,25})')
         answerMatch = answerPattern.finditer(self._answer)
         for match in answerMatch:
             self.listOfAnswers.append(match[0])
 
     def AnswerToDict(self):
+        """
+        Handles the list of answers and assigns them to corresponding keys in dictionary.
+        Removes spaces and fills in empty dictionary values for output.
+        """
+
         for currAns in self.listOfAnswers:
             currIndex = int(currAns[0])
             newAns = currAns[1:]
@@ -41,6 +115,10 @@ class Categories:
                     self.orderedAnswers[i] = "\u2717"
 
     def PrintOutput(self):
+        """
+        Prints the categories and their corresponding answers to finish the game.
+        """
+
         for i in range(9):
             print(f"{i+1}.  {self.categories[i]:<32}\t{self.orderedAnswers[i+1]}")
         print("\n")
@@ -76,10 +154,6 @@ def GetCategories():
     Opens the categories.txt files and randomly selects 9 categories to find words for.
     Outputs the 9 numbered categories.
 
-    Parameters
-    ------------------
-    none
-
     Returns
     ------------------
     Categories
@@ -104,15 +178,8 @@ def StartGame():
     """
     Starts the game, outputs 9 random categories by calling GetCategories().
     Counts down from 100 seconds and asks the user to continuously input words 
-    that match with the given categories.
-
-    Parameters
-    ------------------
-    none
-
-    Returns
-    ------------------
-    none
+    that match with the given categories. Uses object-oriented programming to handle
+    user input and return proper data.
     """
 
     print("100 Seconds Start NOW!\n")    
@@ -134,14 +201,6 @@ def MainMenu():
     """
     Directs the program to the proper functions based on user-requested inputs. Outputs
     random letter and asks user to roll again or begin the game.
-
-    Parameters
-    ------------------
-    none
-
-    Returns
-    ------------------
-    none
     """
 
     letterToPlay = 'A'                                      #initialize variables
