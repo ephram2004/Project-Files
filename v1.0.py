@@ -2,14 +2,24 @@ import string
 import random
 import time
 import numpy as np
+import re
 
 
 class Categories:
-    def __init__(self, categories):
+    def __init__(self, categories, answer=""):
         self.categories = categories
+        self.answer = answer
 
     def __str__(self):
         return f"{self.categories}"
+
+    @property
+    def answer(self):
+        return self._answer
+
+    @answer.setter
+    def answer(self, newAnswer):
+        self._answer = newAnswer
 
 
 def RandLetter(currLetter):
@@ -87,6 +97,8 @@ def StartGame():
     results = GetCategories()                       #calls functions to print random categories, gets object
     while time.time() - startTime <= 10:            #120 second timer
         usrWords += str(input())                    #continuously get user input
+
+    results._answer = usrWords
 
     print(results)
     
