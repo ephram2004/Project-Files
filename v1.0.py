@@ -32,7 +32,7 @@ def StartGame():
     """
     Starts the game, counts down from 120 seconds and asks the user to continuously
     input words that match with the given categories.
-    
+
     Parameters
     ------------------
     none
@@ -43,8 +43,11 @@ def StartGame():
     """
 
     print("Starting Game\n")
-    startTime = time.time()
+    categoriesFile = open('categories.txt', 'r')
+    categories = categoriesFile.readlines()
     usrWords = ""
+    startTime = time.time()
+    
 
     while time.time() - startTime <= 10:
         usrWords += str(input())
