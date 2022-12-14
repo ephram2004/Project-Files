@@ -49,7 +49,7 @@ def MainMenu():
     letterToPlay = 'A'                                      #initialize variables
     usrOption = 0
 
-    while usrOption != 3:                               #asks for user option input
+    while usrOption != 3:                                   #asks for user option input
         letterToPlay = RandLetter(letterToPlay)             #calls function to output random letter
         print(f'\nCurrent Letter is: {letterToPlay}\n')
         usrOption = int(input(f"Select an option:\n1. Start game\n2. Re-Roll Letter\n3. Exit\n"))
