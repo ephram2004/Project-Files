@@ -1,24 +1,23 @@
 import string
 import random
 import time
-from threading import Thread
 
 #find a random letter
 def RandLetter(currLetter):
     """ 
     Generates a list of all the letters in the alphabet and picks one at random.
-        If the randomly generated letter matches with the currently selected letter,
-        a new letter is picked.
-        
-        Parameters
-        ------------------
-        currLetter : char
-                  current selected letter
-                  
-        Returns
-        ------------------
-        char
-            randomly generated letter
+    If the randomly generated letter matches with the currently selected letter,
+    a new letter is picked.
+    
+    Parameters
+    ------------------
+    currLetter : char
+                current selected letter
+                
+    Returns
+    ------------------
+    char
+        randomly generated letter
     """
 
     newLetter = currLetter                              #preset new letter 
@@ -29,10 +28,11 @@ def RandLetter(currLetter):
     return newLetter                                    #returns the new letter
 
 
-def Counter():
+def StartGame():
     """
-    Counts down from 120 seconds.
-
+    Starts the game, counts down from 120 seconds and asks the user to continuously
+    input words that match with the given categories.
+    
     Parameters
     ------------------
     none
@@ -42,20 +42,14 @@ def Counter():
     none
     """
 
-    startTime = time.time()
-    for i in range(10):
-        time.sleep(1)
-
-
-def StartGame():
-    """
-    Begins the game. Uses "Thread" to run the timer independently from the user input function.
-    Function calls the two separate Counter() and GetInput() functions.
-    """
-
     print("Starting Game\n")
-    runTimer = Thread(target=Counter)
-    runTimer.start()
+    startTime = time.time()
+    usrWords = ""
+
+    while time.time() - startTime <= 10:
+        usrWords += str(input())
+
+
 
 
 def MainMenu():
