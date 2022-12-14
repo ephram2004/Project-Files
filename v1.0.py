@@ -3,7 +3,10 @@ import random
 import time
 import numpy as np
 import re
+from threading import Thread
+import os
 
+usrWords = ""
 
 class Categories:
     """
@@ -93,7 +96,7 @@ class Categories:
         Outputs the answers into a list
         """
 
-        answerPattern = re.compile(r'([1-9])\s?([A-Za-z\'\- ]{1,25})')      #splits answers from raw string
+        answerPattern = re.compile(r'([1-9])\s?([A-Za-z\'\-\& ]{1,50})')    #splits answers from raw string
         answerMatch = answerPattern.finditer(self._answer)                  #finds answers using instructions above
         for match in answerMatch:                                           #maps all answers to a list
             self.listOfAnswers.append(match[0])
@@ -104,13 +107,13 @@ class Categories:
         Removes spaces and fills in empty dictionary values for output.
         """
 
-        for currAns in self.listOfAnswers:                                  #handles each answer in list
-            currIndex = int(currAns[0])                                     #changes the first digit to int type
-            newAns = currAns[1:]                                            #removes digit from answer
-            if newAns[0] == " ":                                            #if extra whitespace is at start of answer, remove it
-                newAns = newAns[1:].title()                                 #every word is uppercase
-            self.orderedAnswers[currIndex] = newAns                         #add answer to corresponding key in dict
-            for i in range(10):                                             #replace empty dict values with a cross
+        for currAns in self.listOfAnswers:              #handles each answer in list
+            currIndex = int(currAns[0])                 #changes the first digit to int type
+            newAns = currAns[1:]                        #removes digit from answer
+            if newAns[0] == " ":                        #if extra whitespace is at start of answer, remove it
+                newAns = newAns[1:].title()             #every word is uppercase
+            self.orderedAnswers[currIndex] = newAns     #add answer to corresponding key in dict
+            for i in range(10):                         #replace empty dict values with a cross
                 if not self.orderedAnswers[i]:
                     self.orderedAnswers[i] = "\u2717"
 
@@ -119,7 +122,7 @@ class Categories:
         Prints the categories and their corresponding answers to finish the game.
         """
 
-        for i in range(9):                                                  #prints category number, category, and corresponding answer
+        for i in range(9):                              #prints category number, category, and corresponding answer
             print(f"{i+1}.  {self.categories[i]:<32}\t{self.orderedAnswers[i+1]}")
         print("\n")
 
@@ -174,27 +177,52 @@ def GetCategories():
     return results                                      #returns created object
 
 
+def GetInput():
+    """
+    Fetches the continuous user input stream from the console. Contains an infinite loop so that the user
+    can keep entering data. This function is stopped as soon as the counter runs out. Variables are called
+    globally because return statements in Thread functions are diffiult to manage.
+    """
+    
+    global startTime, usrWords                          #globally declare variables
+    startTime = time.time()                             #get the time of game start
+    while True:                                         #continously fetch input user text as a large appended string
+        usrWords += str(input())
+
+
+def Counter():
+    """
+    Keeps track of elapsed time and handles the user answer data to output the answers once the game is finished.
+    Exits the program after outputting the data, closing all functions and stopping the console from fetching
+    input data.
+    """
+
+    print("100 Seconds Start NOW!\n")                   #announce game start
+    results = GetCategories()                           #calls functions to print random categories, gets object
+    while True:
+        if time.time() - startTime == 100:
+            print("\nTime is up!")                      #announce game end
+            print("\n")
+
+            results._answer = usrWords                  #create object with answers constructor
+            results.GetAnswers()                        #call function to handle raw string
+            results.AnswerToDict()                      #call function to move answer list to dict
+            results.PrintOutput()                       #call function to print the results
+
+            os._exit(1)                                 #exits the entire program
+
+
 def StartGame():
     """
-    Starts the game, outputs 9 random categories by calling GetCategories().
-    Counts down from 100 seconds and asks the user to continuously input words 
-    that match with the given categories. Uses object-oriented programming to handle
-    user input and return proper data.
-    """
+    Starts the game, uses threading to call the Counter() and GetInuput() functions simultaneously
+    This method stops the input from fetching console data as soon as the counter expires.
+    """                                
 
-    print("100 Seconds Start NOW!\n")    
-    usrWords = ""                                   
-    startTime = time.time()                         #gets current time
-    results = GetCategories()                       #calls functions to print random categories, gets object
-    while time.time() - startTime <= 100:           #100 second timer
-        usrWords += str(input())                    #continuously get user input
-
-    print("\n")
-    results._answer = usrWords                      #create object with answers constructor
-
-    results.GetAnswers()                            #call function to handle raw string
-    results.AnswerToDict()                          #call function to move answer list to dict
-    results.PrintOutput()                           #call function to print the results
+    answer = Thread(target=GetInput)                    #assign GetInput thread
+    counter = Thread(target=Counter)                    #assign Counter thread
+    answer.start()                                      #run GetInput function
+    counter.start()                                     #run Counter function simultaneously
+    time.sleep(100)                                     #waits for Threads to finish before ending function
 
 
 def MainMenu():
@@ -213,7 +241,6 @@ def MainMenu():
         match usrOption:                                    #calls function depending on user input
             case 1:
                 StartGame()                                 #starts game if input is 1
-                break                                       #will exit program after one run
             case 2:     
                 continue                                    #loops again to randomize letter
             case 3:
