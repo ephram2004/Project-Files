@@ -13,7 +13,7 @@ class Categories:
         self.orderedAnswers = dict.fromkeys(range(11))
 
     def __str__(self):
-        return f"{self.listOfAnswers} -----> {self.orderedAnswers}"
+        return f"{self.orderedAnswers}"
 
     @property
     def answer(self):
@@ -33,11 +33,15 @@ class Categories:
         for currAns in self.listOfAnswers:
             currIndex = int(currAns[0])
             newAns = currAns[1:]
-            if newAns[0] == "":
+            if newAns[0] == " ":
                 newAns = newAns[1:]
             self.orderedAnswers[currIndex] = newAns
 
-        
+    def PrintOutput(self):
+        for i in range(9):
+            print(f"{i+1}.  {self.categories[i]:<32}\t{self.orderedAnswers[i+1]}")
+        print(f"10. {self.categories[9]:<32}\t{self.orderedAnswers[10]}")
+        print("\n")
 
 
 def RandLetter(currLetter):
@@ -116,11 +120,12 @@ def StartGame():
     while time.time() - startTime <= 10:            #120 second timer
         usrWords += str(input())                    #continuously get user input
 
+    print("\n")
     results._answer = usrWords
 
     results.GetAnswers()
     results.AnswerToDict()
-    print(results)
+    results.PrintOutput()
     
 
 
