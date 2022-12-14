@@ -3,7 +3,15 @@ import random
 import time
 import numpy as np
 
-#find a random letter
+
+class Categories:
+    def __init__(self, categories):
+        self.categories = categories
+
+    def __str__(self):
+        return f"{self.categories}"
+
+
 def RandLetter(currLetter):
     """ 
     Generates a list of all the letters in the alphabet and picks one at random.
@@ -40,16 +48,22 @@ def GetCategories():
 
     Returns
     ------------------
-    none
+    Categories
+            object containing the randomly selected categories
     """
 
     categoriesFile = open('categories.txt', 'r')        #opens categories txt file
     categories = categoriesFile.readlines()             #maps every line to list
     selectedCategories = np.random.choice(range(106), 10, replace=False)    #creates array with 10 random numbers (0-106)
     curCat = 0
+    selectList = []
     for i in selectedCategories:                        #loop to output the random categories for this run
         curCat+=1
         print(f'{curCat:>2}. {categories[i]}')
+        selectList.append(categories[i][:-1])           #sets categories into list
+
+    results = Categories(selectList)                    #creates Categories object with items from list
+    return results                                      #returns created object
 
 
 def StartGame():
@@ -70,11 +84,12 @@ def StartGame():
     print("Starting Game\n")    
     usrWords = ""                                   
     startTime = time.time()                         #gets current time
-    GetCategories()                                 #calls functions to print random categories
+    results = GetCategories()                       #calls functions to print random categories, gets object
     while time.time() - startTime <= 10:            #120 second timer
         usrWords += str(input())                    #continuously get user input
 
-
+    print(results)
+    
 
 
 def MainMenu():
@@ -108,8 +123,6 @@ def MainMenu():
                 break                                       #breaks out of while loop to end program
             case _:
                 print("Invalid Option. Please Try Again.")  #in case user input is invalid
-
-
 
 
 MainMenu()
