@@ -253,6 +253,7 @@ def MainMenu():
         usrOption = int(input(f"Select an option:\n1. Start game\n2. Re-Roll Letter\n3. Exit\n"))
         match usrOption:                                    #calls function depending on user input
             case 1:
+                print("\n")
                 StartGame()                                 #starts game if input is 1
             case 2:     
                 continue                                    #loops again to randomize letter
