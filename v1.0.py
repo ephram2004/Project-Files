@@ -5,6 +5,8 @@ import numpy as np
 import re
 from threading import Thread
 import os
+from tkinter import *
+import sys
 
 usrWords = ""
 
@@ -187,7 +189,7 @@ def GetInput():
     global startTime, usrWords                          #globally declare variables
     startTime = time.time()                             #get the time of game start
     while True:                                         #continously fetch input user text as a large appended string
-        usrWords += str(input())
+        usrWords += sys.stdin.readline()
 
 
 def Counter():
@@ -197,7 +199,6 @@ def Counter():
     input data.
     """
 
-    print("100 Seconds Start NOW!\n")                   #announce game start
     results = GetCategories()                           #calls functions to print random categories, gets object
     while True:
         if time.time() - startTime == 100:
@@ -215,15 +216,27 @@ def Counter():
 def StartGame():
     """
     Starts the game, uses threading to call the Counter() and GetInuput() functions simultaneously
-    This method stops the input from fetching console data as soon as the counter expires.
+    This method stops the input from fetching console data as soon as the counter expires. Includes 
+    Tkinter library to display timer as it is counting down.
     """                                
 
     answer = Thread(target=GetInput)                    #assign GetInput thread
     counter = Thread(target=Counter)                    #assign Counter thread
     answer.start()                                      #run GetInput function
     counter.start()                                     #run Counter function simultaneously
-    time.sleep(100)                                     #waits for Threads to finish before ending function
 
+    win = Tk()                                          #initialize Tk window
+    win.geometry('300x300')                             #set display size
+    win.resizable(False, False)                         #non-scalable
+    win.config(bg='#EBECF0')                            #background color
+    timeLeft = StringVar()                              #initialize variable as "image string"
+    Entry(win, textvariable=timeLeft, width=3, font='Helvetica 48').place(x=110, y=110)     #text style
+    currTime = 100
+    timeLeft.set(str(currTime))                         #first value from timer
+    while True:
+        currTime = 100 - (time.time() - startTime)      #countdown from 100
+        timeLeft.set(f'{str(int(currTime))}')           #output seconds converted from float to integer
+        win.update()                                    #update the GUI
 
 def MainMenu():
     """
