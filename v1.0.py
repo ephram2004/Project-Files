@@ -6,12 +6,14 @@ import re
 
 
 class Categories:
-    def __init__(self, categories, answer=""):
+    def __init__(self, categories, answer="", listOfAnswers=[]):
         self.categories = categories
         self.answer = answer
+        self.listOfAnswers = listOfAnswers
+        self.orderedAnswers = dict.fromkeys(range(11))
 
     def __str__(self):
-        return f"{self.categories}"
+        return f"{self.listOfAnswers} -----> {self.orderedAnswers}"
 
     @property
     def answer(self):
@@ -20,6 +22,22 @@ class Categories:
     @answer.setter
     def answer(self, newAnswer):
         self._answer = newAnswer
+
+    def GetAnswers(self):
+        answerPattern = re.compile(r'([1-9]|10)\s?([A-Za-z ]{1,25})')
+        answerMatch = answerPattern.finditer(self._answer)
+        for match in answerMatch:
+            self.listOfAnswers.append(match[0])
+
+    def AnswerToDict(self):
+        for currAns in self.listOfAnswers:
+            currIndex = int(currAns[0])
+            newAns = currAns[1:]
+            if newAns[0] == "":
+                newAns = newAns[1:]
+            self.orderedAnswers[currIndex] = newAns
+
+        
 
 
 def RandLetter(currLetter):
@@ -100,6 +118,8 @@ def StartGame():
 
     results._answer = usrWords
 
+    results.GetAnswers()
+    results.AnswerToDict()
     print(results)
     
 
