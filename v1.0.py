@@ -93,9 +93,9 @@ class Categories:
         Outputs the answers into a list
         """
 
-        answerPattern = re.compile(r'([1-9])\s?([A-Za-z\'\- ]{1,25})')
-        answerMatch = answerPattern.finditer(self._answer)
-        for match in answerMatch:
+        answerPattern = re.compile(r'([1-9])\s?([A-Za-z\'\- ]{1,25})')      #splits answers from raw string
+        answerMatch = answerPattern.finditer(self._answer)                  #finds answers using instructions above
+        for match in answerMatch:                                           #maps all answers to a list
             self.listOfAnswers.append(match[0])
 
     def AnswerToDict(self):
@@ -104,13 +104,13 @@ class Categories:
         Removes spaces and fills in empty dictionary values for output.
         """
 
-        for currAns in self.listOfAnswers:
-            currIndex = int(currAns[0])
-            newAns = currAns[1:]
-            if newAns[0] == " ":
-                newAns = newAns[1:]
-            self.orderedAnswers[currIndex] = newAns
-            for i in range(10):
+        for currAns in self.listOfAnswers:                                  #handles each answer in list
+            currIndex = int(currAns[0])                                     #changes the first digit to int type
+            newAns = currAns[1:]                                            #removes digit from answer
+            if newAns[0] == " ":                                            #if extra whitespace is at start of answer, remove it
+                newAns = newAns[1:].title()                                 #every word is uppercase
+            self.orderedAnswers[currIndex] = newAns                         #add answer to corresponding key in dict
+            for i in range(10):                                             #replace empty dict values with a cross
                 if not self.orderedAnswers[i]:
                     self.orderedAnswers[i] = "\u2717"
 
@@ -119,7 +119,7 @@ class Categories:
         Prints the categories and their corresponding answers to finish the game.
         """
 
-        for i in range(9):
+        for i in range(9):                                                  #prints category number, category, and corresponding answer
             print(f"{i+1}.  {self.categories[i]:<32}\t{self.orderedAnswers[i+1]}")
         print("\n")
 
@@ -190,11 +190,11 @@ def StartGame():
         usrWords += str(input())                    #continuously get user input
 
     print("\n")
-    results._answer = usrWords
+    results._answer = usrWords                      #create object with answers constructor
 
-    results.GetAnswers()
-    results.AnswerToDict()
-    results.PrintOutput()
+    results.GetAnswers()                            #call function to handle raw string
+    results.AnswerToDict()                          #call function to move answer list to dict
+    results.PrintOutput()                           #call function to print the results
 
 
 def MainMenu():
@@ -213,7 +213,7 @@ def MainMenu():
         match usrOption:                                    #calls function depending on user input
             case 1:
                 StartGame()                                 #starts game if input is 1
-                break
+                break                                       #will exit program after one run
             case 2:     
                 continue                                    #loops again to randomize letter
             case 3:
