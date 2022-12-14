@@ -1,5 +1,7 @@
 import string
 import random
+import time
+from threading import Thread
 
 #find a random letter
 def RandLetter(currLetter):
@@ -27,9 +29,33 @@ def RandLetter(currLetter):
     return newLetter                                    #returns the new letter
 
 
+def Counter():
+    """
+    Counts down from 120 seconds.
+
+    Parameters
+    ------------------
+    none
+
+    Returns
+    ------------------
+    none
+    """
+
+    startTime = time.time()
+    for i in range(10):
+        time.sleep(1)
+
 
 def StartGame():
+    """
+    Begins the game. Uses "Thread" to run the timer independently from the user input function.
+    Function calls the two separate Counter() and GetInput() functions.
+    """
+
     print("Starting Game\n")
+    runTimer = Thread(target=Counter)
+    runTimer.start()
 
 
 def MainMenu():
@@ -56,8 +82,9 @@ def MainMenu():
         match usrOption:
             case 1:
                 StartGame()
+                break
             case 2:
-                letterToPlay = RandLetter(letterToPlay)
+                continue
             case 3:
                 break
             case _:
