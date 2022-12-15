@@ -9,6 +9,7 @@ from tkinter import *
 import sys
 
 usrWords = ""
+countLimit = 100
 
 class Categories:
     """
@@ -100,7 +101,7 @@ class Categories:
 
         answerPattern = re.compile(r'([1-9])\s?([A-Za-z\'\-\& ]{1,50})')    #splits answers from raw string
         answerMatch = answerPattern.finditer(self._answer)                  #finds answers using instructions above
-        for match in answerMatch:                                           #maps all answers to a list
+        for match in answerMatch:                                           #maps all answers to a list 
             self.listOfAnswers.append(match[0])
 
     def AnswerToDict(self):
@@ -153,6 +154,14 @@ def RandLetter(currLetter):
     
     return newLetter                                    #returns the new letter
 
+def ChngTimer():
+    """
+    Changes the countdown value by asking the user for a new value.
+    The default value is set to 100 seconds.
+    """
+    global countLimit                                               #set countLimit scope to global
+    countLimit = int(input("Enter counter value in seconds:\n"))    #ask user to enter counter limit
+
 
 def GetCategories():
     """
@@ -201,7 +210,7 @@ def Counter():
 
     results = GetCategories()                           #calls functions to print random categories, gets object
     while True:
-        if time.time() - startTime == 100:
+        if time.time() - startTime == countLimit:       #when the counter reaches the limit
             print("\nTime is up!")                      #announce game end
             print("\n")
 
@@ -231,12 +240,10 @@ def StartGame():
     win.config(bg='#EBECF0')                            #background color
     timeLeft = StringVar()                              #initialize variable as "image string"
     Entry(win, textvariable=timeLeft, width=3, font='Helvetica 48').place(x=110, y=110)     #text style
-    currTime = 100
-    timeLeft.set(str(currTime))                         #first value from timer
     while True:
-        currTime = 100 - (time.time() - startTime)      #countdown from 100
-        timeLeft.set(f'{str(int(currTime))}')           #output seconds converted from float to integer
-        win.update()                                    #update the GUI
+        currTime = countLimit - (time.time() - startTime) + 1   #countdown from set limit
+        timeLeft.set(f'{str(int(currTime))}')                   #output seconds converted from float to integer
+        win.update()                                            #update the GUI
 
 def MainMenu():
     """
@@ -247,10 +254,10 @@ def MainMenu():
     letterToPlay = 'A'                                      #initialize variables
     usrOption = 0
 
-    while usrOption != 3:                                   #asks for user option input
+    while usrOption != 4:                                   #asks for user option input
         letterToPlay = RandLetter(letterToPlay)             #calls function to output random letter
         print(f'\nCurrent Letter is: {letterToPlay}\n')
-        usrOption = int(input(f"Select an option:\n1. Start game\n2. Re-Roll Letter\n3. Exit\n"))
+        usrOption = int(input(f"Select an option:\n1. Start game\n2. Re-Roll letter\n3. Change time limit (default is 100s)\n4. Exit\n"))
         match usrOption:                                    #calls function depending on user input
             case 1:
                 print("\n")
@@ -258,6 +265,8 @@ def MainMenu():
             case 2:     
                 continue                                    #loops again to randomize letter
             case 3:
+                ChngTimer()
+            case 4:
                 break                                       #breaks out of while loop to end program
             case _:
                 print("Invalid Option. Please Try Again.")  #in case user input is invalid
