@@ -159,8 +159,8 @@ def ChngTimer():
     Changes the countdown value by asking the user for a new value.
     The default value is set to 100 seconds.
     """
-    global countLimit                                               #set countLimit scope to global
-    countLimit = int(input("Enter counter value in seconds:\n"))    #ask user to enter counter limit
+    global countLimit                                                           #set countLimit scope to global
+    countLimit = int(input("Enter counter value in seconds (max: 999):\n"))     #ask user to enter counter limit
 
 
 def GetCategories():
@@ -174,9 +174,9 @@ def GetCategories():
             object containing the randomly selected categories
     """
 
-    categoriesFile = open('categories.txt', 'r')        #opens categories txt file
-    categories = categoriesFile.readlines()             #maps every line to list
-    selectedCategories = np.random.choice(range(106), 9, replace=False)    #creates array with 10 random numbers (0-106)
+    categoriesFile = open('categories.txt', 'r')                            #opens categories txt file
+    categories = categoriesFile.readlines()                                 #maps every line to list
+    selectedCategories = np.random.choice(range(106), 9, replace=False)     #creates array with 10 random numbers (0-106)
     curCat = 0
     selectList = []
     for i in selectedCategories:                        #loop to output the random categories for this run
@@ -254,19 +254,31 @@ def MainMenu():
     letterToPlay = 'A'                                      #initialize variables
     usrOption = 0
 
-    while usrOption != 4:                                   #asks for user option input
-        letterToPlay = RandLetter(letterToPlay)             #calls function to output random letter
-        print(f'\nCurrent Letter is: {letterToPlay}\n')
-        usrOption = int(input(f"Select an option:\n1. Start game\n2. Re-Roll letter\n3. Change time limit (default is 100s)\n4. Exit\n"))
+    while usrOption != 5:                                   #asks for user option input
+        if usrOption != 1 and usrOption != 4:               #does not change letter options 1 or 4 are chosen
+            letterToPlay = RandLetter(letterToPlay)         #calls function to output random letter
+        print(f'\nCurrent Letter is: {letterToPlay}')       #prints letter to play with
+        print(f'Timer is set to {countLimit} seconds\n')    #prints timer limit
+        usrOption = int(input(f"Select an option:\n1. Open instructions\n2. Start game\n3. Re-Roll letter\n\
+4. Change time limit (default is 100s)\n5. Exit\n"))
         match usrOption:                                    #calls function depending on user input
             case 1:
+                print("\nWhen selecting \"start game\" the console will output a set of 9 randomly \
+generated categories.\nThe player must find a word starting with the given letter that matches with \
+each category.\nTo give an answer, enter the category's number, followed by a space, followed \
+by the word or\nexpression. Press enter to submit the answer. An example of a valid answer is: \
+\"4 Northeastern.\"\nSpecial characters, such as -, &, and ', are also accepted, as long as they are \
+preceeded by a word.\nAnswers do not have to be given in order. If you find a new word for an already \
+answered category,\nsimply write the new answer with the corresponding category number, and the program \
+will automatically\nreplace an old answer with the most recent one. Good luck!")
+            case 2:
                 print("\n")
                 StartGame()                                 #starts game if input is 1
-            case 2:     
+            case 3:     
                 continue                                    #loops again to randomize letter
-            case 3:
-                ChngTimer()
             case 4:
+                ChngTimer()                                 #calls function to change maximum count
+            case 5:
                 break                                       #breaks out of while loop to end program
             case _:
                 print("Invalid Option. Please Try Again.")  #in case user input is invalid
