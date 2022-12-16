@@ -10,6 +10,7 @@ import sys
 
 usrWords = ""
 countLimit = 100
+nmbrCat = 9
 
 class Categories:
     """
@@ -55,7 +56,7 @@ class Categories:
         self.categories = categories
         self.answer = answer
         self.listOfAnswers = listOfAnswers
-        self.orderedAnswers = dict.fromkeys(range(10))
+        self.orderedAnswers = dict.fromkeys(range(nmbrCat+1))
 
     def __str__(self):
         """
@@ -116,7 +117,7 @@ class Categories:
             if newAns[0] == " ":                        #if extra whitespace is at start of answer, remove it
                 newAns = newAns[1:].title()             #every word is uppercase
             self.orderedAnswers[currIndex] = newAns     #add answer to corresponding key in dict
-            for i in range(10):                         #replace empty dict values with a cross
+            for i in range(nmbrCat + 1):                #replace empty dict values with a cross
                 if not self.orderedAnswers[i]:
                     self.orderedAnswers[i] = "\u2717"
 
@@ -125,7 +126,7 @@ class Categories:
         Prints the categories and their corresponding answers to finish the game.
         """
 
-        for i in range(9):                              #prints category number, category, and corresponding answer
+        for i in range(nmbrCat):                        #prints category number, category, and corresponding answer
             print(f"{i+1}.  {self.categories[i]:<32}\t{self.orderedAnswers[i+1]}")
         print("\n")
 
@@ -174,9 +175,9 @@ def GetCategories():
             object containing the randomly selected categories
     """
 
-    categoriesFile = open('categories.txt', 'r')                            #opens categories txt file
-    categories = categoriesFile.readlines()                                 #maps every line to list
-    selectedCategories = np.random.choice(range(106), 9, replace=False)     #creates array with 9 random numbers (0-105)
+    categoriesFile = open('categories.txt', 'r')                                #opens categories txt file
+    categories = categoriesFile.readlines()                                     #maps every line to list
+    selectedCategories = np.random.choice(range(106), nmbrCat, replace=False)   #creates array with 9 random numbers (0-105)
     curCat = 0
     selectList = []
     for i in selectedCategories:                        #loop to output the random categories for this run
