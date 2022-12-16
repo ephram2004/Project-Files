@@ -8,9 +8,9 @@ import os
 from tkinter import *
 import sys
 
-usrWords = ""
+usrWords = ""                   #initializing variables
 countLimit = 100
-nmbrCat = 9
+nmbrCat = 10
 
 class Categories:
     """
@@ -100,9 +100,9 @@ class Categories:
         Outputs the answers into a list
         """
 
-        answerPattern = re.compile(r'([1-9])\s?([A-Za-z\'\-\& ]{1,50})')    #splits answers from raw string
-        answerMatch = answerPattern.finditer(self._answer)                  #finds answers using instructions above
-        for match in answerMatch:                                           #maps all answers to a list 
+        answerPattern = re.compile(r'([1-9])[0-9]?\s?([A-Za-z\'\-\& ]{1,50})')  #splits answers from raw string
+        answerMatch = answerPattern.finditer(self._answer)                      #finds answers using instructions above
+        for match in answerMatch:                                               #maps all answers to a list 
             self.listOfAnswers.append(match[0])
 
     def AnswerToDict(self):
@@ -111,13 +111,17 @@ class Categories:
         Removes spaces and fills in empty dictionary values for output.
         """
 
-        for currAns in self.listOfAnswers:              #handles each answer in list
-            currIndex = int(currAns[0])                 #changes the first digit to int type
-            newAns = currAns[1:]                        #removes digit from answer
-            if newAns[0] == " ":                        #if extra whitespace is at start of answer, remove it
-                newAns = newAns[1:].title()             #every word is uppercase
-            self.orderedAnswers[currIndex] = newAns     #add answer to corresponding key in dict
-            for i in range(nmbrCat + 1):                #replace empty dict values with a cross
+        for currAns in self.listOfAnswers:                  #handles each answer in list
+            if nmbrCat > 9:                                 #if two digit category number
+                currIndex = int(currAns[0:2])               #changes the first two digits to int type
+                newAns = currAns[2:].title()                #removes number from answer
+            else:                                           #if one digit category number
+                currIndex = int(currAns[0])                 #changes the first digit to int type
+                newAns = currAns[1:].title()                #removes digit from answer
+            if newAns[0] == " ":                            #if extra whitespace is at start of answer, remove it
+                newAns = newAns[1:].title()                 #every word is uppercase
+            self.orderedAnswers[currIndex] = newAns         #add answer to corresponding key in dict
+            for i in range(nmbrCat + 1):                    #replace empty dict values with a cross
                 if not self.orderedAnswers[i]:
                     self.orderedAnswers[i] = "\u2717"
 
@@ -126,8 +130,11 @@ class Categories:
         Prints the categories and their corresponding answers to finish the game.
         """
 
-        for i in range(nmbrCat):                        #prints category number, category, and corresponding answer
-            print(f"{i+1}.  {self.categories[i]:<32}\t{self.orderedAnswers[i+1]}")
+        for i in range(nmbrCat):                            #prints category number, category, and corresponding answer
+            if i < 9:                                       #for consistent spacing (depending on number of digits)
+                print(f"{(i+1):}.   {self.categories[i]:<32}\t{self.orderedAnswers[i+1]}")
+            else:
+                print(f"{(i+1):}.  {self.categories[i]:<32}\t{self.orderedAnswers[i+1]}")
         print("\n")
 
 
@@ -160,8 +167,17 @@ def ChngTimer():
     Changes the countdown value by asking the user for a new value.
     The default value is set to 100 seconds.
     """
-    global countLimit                                                           #set countLimit scope to global
-    countLimit = int(input("Enter counter value in seconds (max: 999):\n"))     #ask user to enter counter limit
+    global countLimit                                                               #set countLimit scope to global
+    countLimit = int(input("Enter counter value in seconds (max: 999):\n"))         #ask user to enter counter limit
+
+def ChngCat():
+    """
+    Changes the number of randomly generated categories.
+    The default value is set to 10.
+    """
+
+    global nmbrCat                                                                  #set nmbrCat scope to global
+    nmbrCat = int(input("Enter number of random categories to generate (1-99)\n"))  #ask user to enter number
 
 
 def GetCategories():
@@ -177,7 +193,7 @@ def GetCategories():
 
     categoriesFile = open('categories.txt', 'r')                                #opens categories txt file
     categories = categoriesFile.readlines()                                     #maps every line to list
-    selectedCategories = np.random.choice(range(106), nmbrCat, replace=False)   #creates array with 9 random numbers (0-105)
+    selectedCategories = np.random.choice(range(106), nmbrCat, replace=False)   #creates array with n random numbers (0-105)
     curCat = 0
     selectList = []
     for i in selectedCategories:                        #loop to output the random categories for this run
@@ -252,16 +268,19 @@ def MainMenu():
     random letter and asks user to roll again or begin the game.
     """
 
+    print("\nWelcome to ScatterFolie!")
+
     letterToPlay = 'A'                                      #initialize variables
     usrOption = 0
 
-    while usrOption != 5:                                   #asks for user option input
-        if usrOption == 3 or usrOption == 0:               #randomize letter when needed
+    while usrOption != 6:                                   #asks for user option input
+        if usrOption == 3 or usrOption == 0:                #randomize letter when needed
             letterToPlay = RandLetter(letterToPlay)         #calls function to output random letter
         print(f'\nCurrent Letter is: {letterToPlay}')       #prints letter to play with
-        print(f'Timer is set to {countLimit} seconds\n')    #prints timer limit
+        print(f'Timer is set to {countLimit} seconds')      #prints timer limit
+        print(f'Number of categories is: {nmbrCat}\n')      #prints number of generated categories
         usrOption = int(input(f"Select an option:\n1. Open instructions\n2. Start game\n3. Re-Roll letter\n\
-4. Change time limit (default is 100s)\n5. Exit\n"))
+4. Change time limit (default is 100s)\n5. Change number of categories (default is 10)\n6. Exit\n"))
         match usrOption:                                    #calls function depending on user input
             case 1:
                 print("\nWhen selecting \"start game\" the console will output a set of 9 randomly \
@@ -280,6 +299,8 @@ will automatically\nreplace an old answer with the most recent one. Good luck!")
             case 4:
                 ChngTimer()                                 #calls function to change maximum count
             case 5:
+                ChngCat()                                   #calls function to change number of categories
+            case 6:
                 break                                       #breaks out of while loop to end program
             case _:
                 print("Invalid Option. Please Try Again.")  #in case user input is invalid
