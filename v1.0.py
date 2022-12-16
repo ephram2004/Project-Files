@@ -176,7 +176,7 @@ def GetCategories():
 
     categoriesFile = open('categories.txt', 'r')                            #opens categories txt file
     categories = categoriesFile.readlines()                                 #maps every line to list
-    selectedCategories = np.random.choice(range(106), 9, replace=False)     #creates array with 10 random numbers (0-106)
+    selectedCategories = np.random.choice(range(106), 9, replace=False)     #creates array with 9 random numbers (0-105)
     curCat = 0
     selectList = []
     for i in selectedCategories:                        #loop to output the random categories for this run
@@ -255,7 +255,7 @@ def MainMenu():
     usrOption = 0
 
     while usrOption != 5:                                   #asks for user option input
-        if usrOption != 1 and usrOption != 4:               #does not change letter options 1 or 4 are chosen
+        if usrOption == 3 or usrOption == 0:               #randomize letter when needed
             letterToPlay = RandLetter(letterToPlay)         #calls function to output random letter
         print(f'\nCurrent Letter is: {letterToPlay}')       #prints letter to play with
         print(f'Timer is set to {countLimit} seconds\n')    #prints timer limit
