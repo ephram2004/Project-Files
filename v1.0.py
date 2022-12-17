@@ -286,7 +286,7 @@ def MainMenu():
 4. Change time limit (default is 100s)\n5. Change number of categories (default is 10)\n6. Exit\n"))
         match usrOption:                                    #calls function depending on user input
             case 1:
-                print("\nWhen selecting \"start game\" the console will output a set of 9 randomly \
+                print("\nWhen selecting \"start game\" the console will output a set of n randomly \
 generated categories.\nThe player must find a word starting with the given letter that matches with \
 each category.\nTo give an answer, enter the category's number, followed by a space, followed \
 by the word or\nexpression. Press enter to submit the answer. An example of a valid answer is: \
