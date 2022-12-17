@@ -212,8 +212,7 @@ def GetInput():
     globally because return statements in Thread functions are diffiult to manage.
     """
     
-    global startTime, usrWords                          #globally declare variables
-    startTime = time.time()                             #get the time of game start
+    global usrWords                                     #globally declare variable
     while True:                                         #continously fetch input user text as a large appended string
         usrWords += sys.stdin.readline()
 
@@ -225,6 +224,8 @@ def Counter():
     input data.
     """
 
+    global startTime                                    #globally declare variable
+    startTime = time.time()                             #get the time of game start
     results = GetCategories()                           #calls functions to print random categories, gets object
     while True:
         if time.time() - startTime == countLimit:       #when the counter reaches the limit
