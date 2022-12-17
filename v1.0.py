@@ -291,7 +291,7 @@ generated categories.\nThe player must find a word starting with the given lette
 each category.\nTo give an answer, enter the category's number, followed by a space, followed \
 by the word or\nexpression. Press enter to submit the answer. An example of a valid answer is: \
 \"4 Northeastern.\"\nSpecial characters, such as -, &, and ', are also accepted, as long as they are \
-preceeded by a word.\nAnswers do not have to be given in order. If you find a new word for an already \
+preceded by a word.\nAnswers do not have to be given in order. If you find a new word for an already \
 answered category,\nsimply write the new answer with the corresponding category number, and the program \
 will automatically\nreplace an old answer with the most recent one. Good luck!")
             case 2:
