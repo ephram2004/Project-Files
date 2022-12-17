@@ -1,3 +1,5 @@
+#ScatterFolie - Created by Ephram Cola Jacquin
+
 import string
 import random
 import time
